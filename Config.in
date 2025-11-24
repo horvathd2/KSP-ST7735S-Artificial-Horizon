@@ -1,0 +1,6 @@
+config BR2_PACKAGE_KSP_ARTIFICIAL_HORIZON
+    bool "KSP Artificial Horizon"
+    depends on BR2_PACKAGE_LIBGPIOD
+    help
+      Userspace SPI driver and ST7735S display program for KSP.
+

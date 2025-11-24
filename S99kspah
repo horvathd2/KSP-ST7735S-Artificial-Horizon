@@ -1,0 +1,10 @@
+#!/bin/sh
+case "$1" in
+  start)
+    echo "Starting KSP artificial horizon..."
+    /usr/bin/lcd_app &
+    ;;
+  stop)
+    killall lcd_app
+    ;;
+esac
