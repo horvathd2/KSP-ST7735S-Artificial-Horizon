@@ -1,0 +1,12 @@
+#ifndef __NAVBALL_TEXTURE_256_128_
+#define __NAVBALL_TEXTURE_256_128_
+
+#include <stdint.h>
+
+#define NAVBALL_TEXTURE_256_128_HEIGHT 128
+#define NAVBALL_TEXTURE_256_128_WIDTH 256
+
+// array size is 65536
+extern const uint16_t navball_texture_256_128[NAVBALL_TEXTURE_256_128_HEIGHT*NAVBALL_TEXTURE_256_128_WIDTH];
+
+#endif

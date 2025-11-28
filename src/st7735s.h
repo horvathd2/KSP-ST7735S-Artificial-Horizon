@@ -33,8 +33,31 @@ void st7735s_fill_rect(st7735s_t *lcd,
 
 void st7735s_fill_screen(st7735s_t *lcd, uint16_t color);
 
+void st7735s_push_framebuffer(st7735s_t *lcd,
+                              uint16_t *fb,
+                              int w, int h);
+
 void st7735s_draw_pixel(st7735s_t *lcd,
                         uint8_t x, uint8_t y,
                         uint16_t color);
+
+void st7735s_draw_hline(st7735s_t *lcd,
+                        int x, int y,
+                        int w,
+                        uint16_t color);
+
+void st7735s_draw_vline(st7735s_t *lcd,
+                        int x, int y,
+                        int h,
+                        uint16_t color);
+
+void st7735s_draw_line(st7735s_t *lcd,
+                       int x0, int y0,
+                       int x1, int y1,
+                       uint16_t color);
+
+void st7735s_draw_circle(st7735s_t *lcd, uint8_t radius, 
+                         uint16_t X0, uint16_t Y0, 
+                         uint16_t color);
 
 #endif

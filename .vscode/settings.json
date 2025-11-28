@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "horizon.h": "c",
+        "st7735s.h": "c",
+        "navball_texture_256_128.h": "c"
+    }
+}

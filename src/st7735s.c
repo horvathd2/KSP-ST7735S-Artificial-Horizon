@@ -174,3 +174,123 @@ void st7735s_fill_screen(st7735s_t *lcd, uint16_t color)
                       ST7735S_HEIGHT,
                       color);
 }
+
+void st7735s_draw_hline(st7735s_t *lcd,
+                        int x, int y,
+                        int w,
+                        uint16_t color)
+{
+    if (w < 0) {
+        x += w;
+        w = -w;
+    }
+
+    st7735s_set_addr_window(lcd, x, y, x + w - 1, y);
+    uint8_t buf[w * 2];
+
+    for (int i = 0; i < w; i++) {
+        buf[2*i]   = color >> 8;
+        buf[2*i+1] = color & 0xFF;
+    }
+
+    write_data_buf(lcd, buf, w * 2);
+}
+
+void st7735s_draw_vline(st7735s_t *lcd,
+                        int x, int y,
+                        int h,
+                        uint16_t color)
+{
+    if (h < 0) {
+        y += h;
+        h = -h;
+    }
+
+    st7735s_set_addr_window(lcd, x, y, x, y + h - 1);
+    uint8_t buf[h * 2];
+
+    for (int i = 0; i < h; i++) {
+        buf[2*i]   = color >> 8;
+        buf[2*i+1] = color & 0xFF;
+    }
+
+    write_data_buf(lcd, buf, h * 2);
+}
+
+void st7735s_push_framebuffer(st7735s_t *lcd,
+                              uint16_t *fb,
+                              int w, int h)
+{
+    // Set window to full screen
+    st7735s_set_addr_window(lcd, 0, 0, w - 1, h - 1);
+
+    // Data mode
+    gpio_set(lcd->pin_dc, 1);
+
+    // Send entire framebuffer in one big SPI write
+    spi_write_chunked(&lcd->spi,
+                      (uint8_t*)fb,
+                      w * h * sizeof(uint16_t));
+}
+
+void st7735s_draw_line(st7735s_t *lcd,
+                       int x0, int y0,
+                       int x1, int y1,
+                       uint16_t color)
+{
+    int dx = abs(x1 - x0);
+    int sx = x0 < x1 ? 1 : -1;
+    int dy = -abs(y1 - y0);
+    int sy = y0 < y1 ? 1 : -1;
+
+    int err = dx + dy;
+    int e2;
+
+    while (1) {
+        st7735s_draw_pixel(lcd, x0, y0, color);
+
+        if (x0 == x1 && y0 == y1)
+            break;
+
+        e2 = 2 * err;
+
+        if (e2 >= dy) {
+            err += dy;
+            x0 += sx;
+        }
+
+        if (e2 <= dx) {
+            err += dx;
+            y0 += sy;
+        }
+    }
+}
+
+void st7735s_draw_circle(st7735s_t *lcd, uint8_t radius, 
+                         uint16_t X0, uint16_t Y0, 
+                         uint16_t color){
+	int x = 0;
+	int y = radius;
+	int d = 3-2*radius;
+
+	while(x<=y){
+		st7735s_draw_pixel(lcd, X0 + x, Y0 + y, color);
+		st7735s_draw_pixel(lcd, X0 - x, Y0 + y, color);
+		st7735s_draw_pixel(lcd, X0 + x, Y0 - y, color);
+		st7735s_draw_pixel(lcd, X0 - x, Y0 - y, color);
+
+		st7735s_draw_pixel(lcd, X0 + y, Y0 + x, color);
+		st7735s_draw_pixel(lcd, X0 - y, Y0 + x, color);
+		st7735s_draw_pixel(lcd, X0 + y, Y0 - x, color);
+		st7735s_draw_pixel(lcd, X0 - y, Y0 - x, color);
+
+		if(d < 0){
+			d+=4*x+6;
+		}else{
+			d+=4*(x-y)+10;
+			y--;
+		}
+
+		x++;
+	}
+}
