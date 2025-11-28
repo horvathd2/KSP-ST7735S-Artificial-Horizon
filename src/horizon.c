@@ -175,8 +175,8 @@ const float cos_table[TABLE_SIZE] = {
 
 //Wrap angle to [0, 2π)
 static float wrap_angle(float rad) {
-    while (rad < 0) rad += 2 * M_PI;
-    while (rad >= 2 * M_PI) rad -= 2 * M_PI;
+    while (rad < 0) rad += 2 * PI;
+    while (rad >= 2 * PI) rad -= 2 * PI;
     return rad;
 }
 
@@ -200,6 +200,9 @@ static inline void fb_set_pixel(int x, int y, uint16_t color)
 {
     if (x < 0 || x >= FB_WIDTH) return;
     if (y < 0 || y >= FB_HEIGHT) return;
+
+    color = (color >> 8) | (color << 8);
+
     framebuffer[y * FB_WIDTH + x] = color;
 }
 
@@ -289,6 +292,28 @@ void draw_navball(float pitch_deg, float roll_deg, float yaw_deg)
                 navball_texture_256_128[ty * NAVBALL_TEXTURE_256_128_WIDTH + tx];
 
             fb_set_pixel(sx, sy, color);
+        }
+    }
+}
+
+void draw_navball_outline(uint16_t color)
+{
+    int r  = radius;
+    int r2 = r * r;
+
+    for (int sy = cy - r - 1; sy <= cy + r + 1; sy++) {
+        for (int sx = cx - r - 1; sx <= cx + r + 1; sx++) {
+
+            int dx = sx - cx;
+            int dy = sy - cy;
+
+            int dist2 = dx*dx + dy*dy;
+
+            // True 1-pixel outline:
+            // Only draw where dist² is *closest* to r².
+            if (abs(dist2 - r2) <= 1) {
+                fb_set_pixel(sx, sy, color);
+            }
         }
     }
 }

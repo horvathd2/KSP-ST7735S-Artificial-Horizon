@@ -57,7 +57,6 @@ void *lcd_main(void *arguments){
     }
 
     st7735s_fill_screen(&horizon_lcd, 0x0000);
-    st7735s_draw_circle(&horizon_lcd, radius, cx, cy, 0x07E0);
 
     while(1){
         //st7735s_fill_screen(&horizon_lcd, 0xF800); // Red
@@ -75,6 +74,7 @@ void *lcd_main(void *arguments){
         int pitch = 300 * sin(get_ticks_us() / 10.0);
         int roll = 0;//4 * fsin(HAL_GetTick() / 12.0);
         int yaw = fmod(get_ticks_us() / 20.0, 360); // continuous yaw
+
         //uint16_t res = fsin(90);
         //float pitchRAD = 90 * DEG_TO_RAD;
         //itoa(res, buffer, 10);  // base 10
@@ -83,6 +83,7 @@ void *lcd_main(void *arguments){
         //drawNavball(&horizon_lcd, pitch, roll, yaw);
 
         draw_navball(pitch, roll, yaw);
+        draw_navball_outline(0x07E0);
         st7735s_push_framebuffer(&horizon_lcd, horizon_get_framebuffer(), FB_WIDTH, FB_HEIGHT);
 
         //st7735s_draw_circle(&horizon_lcd, radius, cx, cy, 0xFFFF);
