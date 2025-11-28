@@ -296,27 +296,35 @@ void draw_navball(float pitch_deg, float roll_deg, float yaw_deg)
     }
 }
 
-void draw_navball_outline(uint16_t color)
-{
-    int r  = radius;
-    int r2 = r * r;
+void framebuffer_draw_circle(uint8_t rad, 
+                             uint16_t X0, uint16_t Y0, 
+                             uint16_t color){
+	int x = 0;
+	int y = rad;
+	int d = 3-2*rad;
 
-    for (int sy = cy - r - 1; sy <= cy + r + 1; sy++) {
-        for (int sx = cx - r - 1; sx <= cx + r + 1; sx++) {
+	while(x<=y){
+		fb_set_pixel(X0 + x, Y0 + y, color);
+		fb_set_pixel(X0 - x, Y0 + y, color);
+		fb_set_pixel(X0 + x, Y0 - y, color);
+		fb_set_pixel(X0 - x, Y0 - y, color);
 
-            int dx = sx - cx;
-            int dy = sy - cy;
+		fb_set_pixel(X0 + y, Y0 + x, color);
+		fb_set_pixel(X0 - y, Y0 + x, color);
+		fb_set_pixel(X0 + y, Y0 - x, color);
+		fb_set_pixel(X0 - y, Y0 - x, color);
 
-            int dist2 = dx*dx + dy*dy;
+		if(d < 0){
+			d+=4*x+6;
+		}else{
+			d+=4*(x-y)+10;
+			y--;
+		}
 
-            // True 1-pixel outline:
-            // Only draw where dist² is *closest* to r².
-            if (abs(dist2 - r2) <= 1) {
-                fb_set_pixel(sx, sy, color);
-            }
-        }
-    }
+		x++;
+	}
 }
+
 
 
 /*

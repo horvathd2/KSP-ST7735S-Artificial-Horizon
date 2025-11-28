@@ -33,7 +33,9 @@ uint16_t* horizon_get_framebuffer(void);
 
 void draw_navball(float pitch_deg, float roll_deg, float yaw_deg);
 
-void draw_navball_outline(uint16_t color);
+void framebuffer_draw_circle(uint8_t rad, 
+                             uint16_t X0, uint16_t Y0, 
+                             uint16_t color);
 
 /*
 

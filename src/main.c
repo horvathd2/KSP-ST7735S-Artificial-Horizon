@@ -83,7 +83,7 @@ void *lcd_main(void *arguments){
         //drawNavball(&horizon_lcd, pitch, roll, yaw);
 
         draw_navball(pitch, roll, yaw);
-        draw_navball_outline(0x07E0);
+        framebuffer_draw_circle(radius+1, cx, cy, 0x07E0);
         st7735s_push_framebuffer(&horizon_lcd, horizon_get_framebuffer(), FB_WIDTH, FB_HEIGHT);
 
         //st7735s_draw_circle(&horizon_lcd, radius, cx, cy, 0xFFFF);
