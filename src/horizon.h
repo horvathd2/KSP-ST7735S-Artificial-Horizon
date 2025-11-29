@@ -37,21 +37,4 @@ void framebuffer_draw_circle(uint8_t rad,
                              uint16_t X0, uint16_t Y0, 
                              uint16_t color);
 
-/*
-
-int project(float x, float y, 
-            float z, int *sx, 
-            int *sy);
-
-void rotate(float *x, float *y, 
-            float *z, float pitch, 
-            float roll, float yaw);
-
-void drawNavball(st7735s_t *lcd, 
-                 float pitchDeg, 
-                 float rollDeg, 
-                 float yawDeg);
-
-*/
-
 #endif
